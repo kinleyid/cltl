@@ -46,9 +46,12 @@ def new_task():
 	out_dict = {}
 	for key in keys:
 		out_dict[key] = input(key + ': ')
+	print('')
 	return [out_dict]
 
 def get_indices(ls, idx):
+	if idx == []:
+		idx = list(range(len(all_lists[key])))
 	out = []
 	for i in idx:
 		out += [ls[i]]
@@ -56,21 +59,21 @@ def get_indices(ls, idx):
 
 def delete_indices(key, idx): # Delete permanently
 	if idx == []:
-			idx = list(range(len(all_lists[key])))
+		idx = list(range(len(all_lists[key])))
 	idx.sort()
 	for i in range(len(idx)):
 		del all_lists[key][idx[i] - i]
 		
 def recycle_indices(key, idx): # Move to history
 	if idx == []:
-			idx = list(range(len(all_lists[key])))
+		idx = list(range(len(all_lists[key])))
 	idx.sort()
 	for i in range(len(idx)):
 		all_lists['h'] += all_lists[key].pop(idx[i] - i)
 
 def move_indices(key1, key2, idx):
 	if idx == []:
-			idx = list(range(len(all_lists[key])))
+		idx = list(range(len(all_lists[key])))
 	all_lists[key1] += get_indices(all_lists[key2], idx)
 	delete_indices(key2, idx)
 
