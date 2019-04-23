@@ -51,7 +51,7 @@ def new_task():
 
 def get_indices(ls, idx):
 	if idx == []:
-		idx = list(range(len(all_lists[key])))
+		idx = list(range(len(ls)))
 	out = []
 	for i in idx:
 		out += [ls[i]]
@@ -73,7 +73,7 @@ def recycle_indices(key, idx): # Move to history
 
 def move_indices(key1, key2, idx):
 	if idx == []:
-		idx = list(range(len(all_lists[key])))
+		idx = list(range(len(all_lists[key2])))
 	all_lists[key1] += get_indices(all_lists[key2], idx)
 	delete_indices(key2, idx)
 
