@@ -28,7 +28,8 @@
 import pickle
 
 # Global variables
-keys = ['Title', 'Description', 'Importance', 'Deadline']
+keys = ['Title', 'Description', 'Importance', 'Urgency', 'Duration', 'Fun']
+defaults = ['', '', 0, 0, 0, 0]
 savefilename = 'saved.dat'
 try:
 	all_lists = pickle.load(open(savefilename, 'rb'))
@@ -44,8 +45,11 @@ except: # First time running program
 
 def new_task():
 	out_dict = {}
-	for key in keys:
+	for idx in range(len(keys)):
+		key = keys[idx]
 		out_dict[key] = input(key + ': ')
+		if out_dict[key] == '':
+			out_dict[key] = defaults[idx]
 	print('')
 	return [out_dict]
 
@@ -79,7 +83,7 @@ def move_indices(key1, key2, idx):
 
 def get_printable(item):
 	return('%s | %s\n\t%s' % (item['Title'],
-		''.join(['*' for i in range(item['Importance'])]),
+		''.join(['*' for i in range(int(item['Importance']))]),
 		item['Description']))
 
 def print_list(items):
@@ -112,7 +116,8 @@ def parse_in(cmd):
 				with open(savefilename, 'wb') as save_file:
 					pickle.dump(all_lists, save_file)
 				exit()
-		# Process idx
+		
+		# idx from human to python
 		idx = list(map(lambda x: x - 1, idx))
 		
 		# Evaluate command
@@ -134,8 +139,11 @@ def parse_in(cmd):
 						print('Index error')
 					else:
 						all_lists[subj] = get_indices(all_lists[subj], idx)
-				elif verb == 'd': # Move to history
-					recycle_indices(subj, idx)
+				elif verb == 'd': # Remove
+					if subj == 'h': # Delete permanently
+						delete_indices(subj, idx)
+					else:
+						recycle_indices(subj, idx)
 				elif verb == '+': # Add new task
 					all_lists[subj] += new_task()
 		
@@ -149,6 +157,8 @@ def parse_in(cmd):
 
 def main_loop():
 	while True: # Main loop
+		with open(savefilename, 'wb') as save_file:
+			pickle.dump(all_lists, save_file)
 		if all_lists['t'] == []:
 			print('No current task!')
 		else:
